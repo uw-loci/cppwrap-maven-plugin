@@ -32,13 +32,10 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 */
 
-package loci.jar2lib.maven;
+package loci.maven.plugin.cppwrap;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
-
-import java.io.File;
-import java.io.IOException;
 
 /**
  * Goal which creates a C++ project wrapping a Maven Java project.
@@ -49,13 +46,32 @@ import java.io.IOException;
  */
 public class CppWrapMojo extends AbstractMojo {
 
-  /**
-   * TODO
-   */
-  public void execute() throws MojoExecutionException {
-    getLog().info("Hello, world.");
-    // TODO throw MojoExecutionException to cause BUILD ERROR message
-    // TODO throw MojoFailureException to cause BUILD FAILURE message
-  }
+	private static final String CPPWRAP_DIR = "src/main/cppwrap/";
+
+	/**
+	 * Path to conflicts list of Java constants to rename,
+	 * to avoid name collisions.
+	 *
+	 * @parameter expression="${cppwrap.conflictsFile}"
+	 *   default-value="src/main/cppwrap/conflicts.txt"
+	 */
+	private String conflictsFile = CPPWRAP_DIR + "conflicts.txt";
+
+	/**
+	 * Path to header file to prepend to each C++ source file.
+	 *
+	 * @parameter expression="${cppwrap.conflictsFile}"
+	 *   default-value="src/main/cppwrap/conflicts.txt"
+	 */
+	private String headerFile = CPPWRAP_DIR + "header.txt";
+
+	/**
+	 * TODO
+	 */
+	public void execute() throws MojoExecutionException {
+		getLog().info("Hello, world.");
+		// TODO throw MojoExecutionException to cause BUILD ERROR message
+		// TODO throw MojoFailureException to cause BUILD FAILURE message
+	}
 
 }
