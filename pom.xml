@@ -28,6 +28,10 @@
     </license>
   </licenses>
 
+  <properties>
+    <maven.version>2.0.9</maven.version>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>loci</groupId>
@@ -37,7 +41,12 @@
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-plugin-api</artifactId>
-      <version>2.0</version>
+      <version>${maven.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-project</artifactId>
+      <version>${maven.version}</version>
     </dependency>
   </dependencies>
 
@@ -48,7 +57,6 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>loci.maven.plugin.cppwrap</mainClass>
               <packageName>loci.maven.plugin.cppwrap</packageName>
             </manifest>
           </archive>

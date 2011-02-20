@@ -34,19 +34,35 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package loci.maven.plugin.cppwrap;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import loci.jar2lib.Jar2Lib;
+import loci.jar2lib.VelocityException;
+
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.project.MavenProject;
 
 /**
  * Goal which creates a C++ project wrapping a Maven Java project.
  *
  * @author Curtis Rueden
  *
- * @goal cppwrap
+ * @goal wrap
  */
 public class CppWrapMojo extends AbstractMojo {
 
-	private static final String CPPWRAP_DIR = "src/main/cppwrap/";
+	/**
+	 * The Maven project to wrap.
+	 *
+	 * @parameter expression="${project}"
+	 * @required
+	 * @readonly
+	 */
+	private MavenProject project;
 
 	/**
 	 * Path to conflicts list of Java constants to rename,
@@ -55,23 +71,68 @@ public class CppWrapMojo extends AbstractMojo {
 	 * @parameter expression="${cppwrap.conflictsFile}"
 	 *   default-value="src/main/cppwrap/conflicts.txt"
 	 */
-	private String conflictsFile = CPPWRAP_DIR + "conflicts.txt";
+	private File conflictsFile;
 
 	/**
 	 * Path to header file to prepend to each C++ source file.
 	 *
-	 * @parameter expression="${cppwrap.conflictsFile}"
-	 *   default-value="src/main/cppwrap/conflicts.txt"
+	 * @parameter expression="${cppwrap.headerFile}"
+	 *   default-value="src/main/cppwrap/header.txt"
 	 */
-	private String headerFile = CPPWRAP_DIR + "header.txt";
+	private File headerFile;
 
 	/**
-	 * TODO
+	 * Path to output folder for C++ project.
+	 *
+	 * @parameter expression="${cppwrap.outputDir}"
+	 *   default-value="target/cppwrap"
 	 */
+	private File outputDir;
+
+	@Override
 	public void execute() throws MojoExecutionException {
 		getLog().info("Hello, world.");
-		// TODO throw MojoExecutionException to cause BUILD ERROR message
-		// TODO throw MojoFailureException to cause BUILD FAILURE message
+		getLog().info("conflictsFile = " + conflictsFile);
+		getLog().info("headerFile = " + headerFile);
+		getLog().info("project = " + project);
+		getLog().info("dependencies:");
+		final List<?> list = project.getDependencies();
+		for (Object item : list) {
+			getLog().info("\t" + item);
+		}
+
+		final String projectId =
+			project.getArtifactId().replaceAll("[^\\w\\-]", "_");
+		final String projectName = project.getName();
+		final List<String> jarPaths = new ArrayList<String>();
+		jarPaths.add(project.getArtifact().getFile().getPath());
+		final String conflictsPath = conflictsFile.exists() ?
+			conflictsFile.getPath() : null;
+		final String headerPath = headerFile.exists() ?
+			headerFile.getPath() : null;
+		final String outputPath = outputDir.getPath();
+
+		final Jar2Lib jar2lib = new Jar2Lib() {
+			@Override
+			protected void log(String message) {
+				getLog().info(message);
+			}
+		};
+		jar2lib.setProjectId(projectId);
+		jar2lib.setProjectName(projectName);
+		jar2lib.setLibraryPaths(jarPaths);
+		jar2lib.setConflictsPath(conflictsPath);
+		jar2lib.setHeaderPath(headerPath);
+		jar2lib.setOutputPath(outputPath);
+		try {
+			jar2lib.execute();
+		}
+		catch (IOException e) {
+			throw new MojoExecutionException("Error invoking jar2lib", e);
+		}
+		catch (VelocityException e) {
+			throw new MojoExecutionException("Error invoking jar2lib", e);
+		}
 	}
 
 }
