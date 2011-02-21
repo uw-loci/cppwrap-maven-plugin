@@ -42,12 +42,15 @@ import java.util.List;
 import loci.jar2lib.Jar2Lib;
 import loci.jar2lib.VelocityException;
 
+import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 
 /**
  * Goal which creates a C++ project wrapping a Maven Java project.
+ *
+ * Portions of this mojo we adapted from the exec-maven-plugin's ExecJavaMojo,
  *
  * @author Curtis Rueden
  *
@@ -91,21 +94,11 @@ public class CppWrapMojo extends AbstractMojo {
 
 	@Override
 	public void execute() throws MojoExecutionException {
-		getLog().info("Hello, world.");
-		getLog().info("conflictsFile = " + conflictsFile);
-		getLog().info("headerFile = " + headerFile);
-		getLog().info("project = " + project);
-		getLog().info("dependencies:");
-		final List<?> list = project.getDependencies();
-		for (Object item : list) {
-			getLog().info("\t" + item);
-		}
+		final String artifactId = project.getArtifactId();
 
-		final String projectId =
-			project.getArtifactId().replaceAll("[^\\w\\-]", "_");
+		final String projectId = artifactId.replaceAll("[^\\w\\-]", "_");
 		final String projectName = project.getName();
-		final List<String> jarPaths = new ArrayList<String>();
-		jarPaths.add(project.getArtifact().getFile().getPath());
+		final List<String> libraryPaths = getLibraryPaths();
 		final String conflictsPath = conflictsFile.exists() ?
 			conflictsFile.getPath() : null;
 		final String headerPath = headerFile.exists() ?
@@ -120,7 +113,7 @@ public class CppWrapMojo extends AbstractMojo {
 		};
 		jar2lib.setProjectId(projectId);
 		jar2lib.setProjectName(projectName);
-		jar2lib.setLibraryPaths(jarPaths);
+		jar2lib.setLibraryPaths(libraryPaths);
 		jar2lib.setConflictsPath(conflictsPath);
 		jar2lib.setHeaderPath(headerPath);
 		jar2lib.setOutputPath(outputPath);
@@ -133,6 +126,25 @@ public class CppWrapMojo extends AbstractMojo {
 		catch (VelocityException e) {
 			throw new MojoExecutionException("Error invoking jar2lib", e);
 		}
+	}
+
+	private List<String> getLibraryPaths() throws MojoExecutionException {
+		final List<String> libraryPaths = new ArrayList<String>();
+
+		// add project artifact
+		final File projectArtifact = project.getArtifact().getFile();
+		if (projectArtifact == null || !projectArtifact.exists()) {
+			throw new MojoExecutionException("Must execute package target first.");
+		}
+		libraryPaths.add(projectArtifact.getPath());
+
+		// add project runtime dependencies
+		final List<Artifact> artifacts = project.getRuntimeArtifacts();
+		for (final Artifact classPathElement : artifacts) {
+			libraryPaths.add(classPathElement.getFile().getPath());
+		}
+
+		return libraryPaths;
 	}
 
 }
