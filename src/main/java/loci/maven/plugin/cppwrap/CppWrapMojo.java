@@ -80,7 +80,7 @@ public class CppWrapMojo extends AbstractMojo {
 	 * Path to header file to prepend to each C++ source file.
 	 *
 	 * @parameter expression="${cppwrap.headerFile}"
-	 *   default-value="src/main/cppwrap/header.txt"
+	 *   default-value="LICENSE.txt"
 	 */
 	private File headerFile;
 
@@ -98,7 +98,8 @@ public class CppWrapMojo extends AbstractMojo {
 
 		final String projectId = artifactId.replaceAll("[^\\w\\-]", "_");
 		final String projectName = project.getName();
-		final List<String> libraryPaths = getLibraryPaths();
+		final List<String> libraryJars = getLibraryJars();
+		final List<String> classpathJars = getClasspathJars();
 		final String conflictsPath = conflictsFile.exists() ?
 			conflictsFile.getPath() : null;
 		final String headerPath = headerFile.exists() ?
@@ -113,7 +114,8 @@ public class CppWrapMojo extends AbstractMojo {
 		};
 		jar2lib.setProjectId(projectId);
 		jar2lib.setProjectName(projectName);
-		jar2lib.setLibraryPaths(libraryPaths);
+		jar2lib.setLibraryJars(libraryJars);
+		jar2lib.setClasspathJars(classpathJars);
 		jar2lib.setConflictsPath(conflictsPath);
 		jar2lib.setHeaderPath(headerPath);
 		jar2lib.setOutputPath(outputPath);
@@ -128,23 +130,29 @@ public class CppWrapMojo extends AbstractMojo {
 		}
 	}
 
-	private List<String> getLibraryPaths() throws MojoExecutionException {
-		final List<String> libraryPaths = new ArrayList<String>();
+	private List<String> getLibraryJars() throws MojoExecutionException {
+		final List<String> jars = new ArrayList<String>();
 
 		// add project artifact
 		final File projectArtifact = project.getArtifact().getFile();
 		if (projectArtifact == null || !projectArtifact.exists()) {
 			throw new MojoExecutionException("Must execute package target first.");
 		}
-		libraryPaths.add(projectArtifact.getPath());
+		jars.add(projectArtifact.getPath());
+
+		return jars;
+	}
+
+	private List<String> getClasspathJars() {
+		final List<String> jars = new ArrayList<String>();
 
 		// add project runtime dependencies
 		final List<Artifact> artifacts = project.getRuntimeArtifacts();
 		for (final Artifact classPathElement : artifacts) {
-			libraryPaths.add(classPathElement.getFile().getPath());
+			jars.add(classPathElement.getFile().getPath());
 		}
 
-		return libraryPaths;
+		return jars;
 	}
 
 }
