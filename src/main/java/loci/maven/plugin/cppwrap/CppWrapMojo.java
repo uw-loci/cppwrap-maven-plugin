@@ -68,6 +68,18 @@ public class CppWrapMojo extends AbstractMojo {
 	private MavenProject project;
 
 	/**
+	 * Additional dependencies to wrap as part of the C++ project.
+	 *
+	 * For example, if a project human:body:jar:1.0 depends on projects
+	 * human:head:jar:1.0, human:arms:jar:1.0 and human:legs:jar:1.0,
+	 * and you wish to wrap human and head, but not arms or legs,
+	 * you could specify human:head:jar:1.0 as an extra artifact here.
+	 *
+	 * @parameter expression="${cppwrap.libraries}"
+	 */
+	private String[] libraries;
+
+	/**
 	 * Path to conflicts list of Java constants to rename,
 	 * to avoid name collisions.
 	 *
@@ -136,10 +148,38 @@ public class CppWrapMojo extends AbstractMojo {
 		// add project artifact
 		final File projectArtifact = project.getArtifact().getFile();
 		if (projectArtifact == null || !projectArtifact.exists()) {
-			throw new MojoExecutionException("Must execute package target first.");
+			throw new MojoExecutionException(
+				"Must execute package target first (e.g., mvn package cppwrap:wrap).");
 		}
 		jars.add(projectArtifact.getPath());
 
+		// add explicitly enumerated dependencies
+		if (libraries != null) {
+			@SuppressWarnings("unchecked")
+			final List<Artifact> artifacts = project.getRuntimeArtifacts();
+
+			// TODO - avoid M*N complexity here
+			for (final String library : libraries) {
+				boolean foundArtifact = false;
+				for (final Artifact artifact : artifacts) {
+					final String artifactId = artifact.getId();
+					if (library.equals(artifactId)) {
+						final File artifactFile = artifact.getFile();
+						if (!artifactFile.exists()) {
+							throw new MojoExecutionException("Artifact not found: " +
+								artifactFile);
+						}
+						jars.add(artifactFile.getPath());
+						foundArtifact = true;
+						break;
+					}
+				}
+				if (!foundArtifact) {
+					throw new MojoExecutionException("Invalid library dependency: " +
+						library);
+				}
+			}
+		}
 		return jars;
 	}
 
@@ -147,6 +187,7 @@ public class CppWrapMojo extends AbstractMojo {
 		final List<String> jars = new ArrayList<String>();
 
 		// add project runtime dependencies
+		@SuppressWarnings("unchecked")
 		final List<Artifact> artifacts = project.getRuntimeArtifacts();
 		for (final Artifact classPathElement : artifacts) {
 			jars.add(classPathElement.getFile().getPath());
