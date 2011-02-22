@@ -97,6 +97,18 @@ public class CppWrapMojo extends AbstractMojo {
 	private File headerFile;
 
 	/**
+	 * Path to folder containing additional C++ source code.
+	 *
+	 * Each .cpp file in the folder should contain a main method.
+	 * These files will then be compiled as part of the build process,
+	 * as individual executables.
+	 *
+	 * @parameter expression="${cppwrap.sourceDir}"
+	 *   default-value="src/main/cppwrap"
+	 */
+	private File sourceDir;
+
+	/**
 	 * Path to output folder for C++ project.
 	 *
 	 * @parameter expression="${cppwrap.outputDir}"
@@ -116,6 +128,8 @@ public class CppWrapMojo extends AbstractMojo {
 			conflictsFile.getPath() : null;
 		final String headerPath = headerFile.exists() ?
 			headerFile.getPath() : null;
+		final String sourcePath = sourceDir.isDirectory() ?
+			sourceDir.getPath() : null;
 		final String outputPath = outputDir.getPath();
 
 		final Jar2Lib jar2lib = new Jar2Lib() {
@@ -130,6 +144,7 @@ public class CppWrapMojo extends AbstractMojo {
 		jar2lib.setClasspathJars(classpathJars);
 		jar2lib.setConflictsPath(conflictsPath);
 		jar2lib.setHeaderPath(headerPath);
+		jar2lib.setSourcePath(sourcePath);
 		jar2lib.setOutputPath(outputPath);
 		try {
 			jar2lib.execute();
