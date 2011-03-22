@@ -50,7 +50,11 @@ import org.apache.maven.project.MavenProject;
 /**
  * Goal which creates a C++ project wrapping a Maven Java project.
  *
- * Portions of this mojo we adapted from the exec-maven-plugin's ExecJavaMojo,
+ * Portions of this mojo were adapted from exec-maven-plugin's ExecJavaMojo.
+ *
+ * <dl><dt><b>Source code:</b></dt>
+ * <dd><a href="http://dev.loci.wisc.edu/trac/software/browser/trunk/projects/cppwrap-maven-plugin/src/main/java/loci/maven/plugin/cppwrap/CppWrapMojo.java">Trac</a>,
+ * <a href="http://dev.loci.wisc.edu/svn/software/trunk/projects/cppwrap-maven-plugin/src/main/java/loci/maven/plugin/cppwrap/CppWrapMojo.java">SVN</a></dd></dl>
  *
  * @author Curtis Rueden
  *
