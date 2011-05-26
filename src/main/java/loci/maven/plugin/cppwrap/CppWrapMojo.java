@@ -37,7 +37,10 @@ package loci.maven.plugin.cppwrap;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Arrays;
 
 import loci.jar2lib.Jar2Lib;
 import loci.jar2lib.VelocityException;
@@ -119,6 +122,24 @@ public class CppWrapMojo extends AbstractMojo {
 	 *   default-value="target/cppwrap"
 	 */
 	private File outputDir;
+	
+	/**
+	 * Path to a text file listing core Java classes to be ensured
+	 * proxied.
+	 *
+	 * @parameter expression="${cppwrap.coreFile}"
+	 *   default-value="src/main/cppwrap/core.txt"
+	 */
+	private File coreFile;
+	
+	/**
+	 * Path to text file, the contents of which will be
+	 * appended to resulting CMakeLists.txt for this project.
+	 *
+	 * @parameter expression="${cppwrap.extrasFile}"
+	 *   default-value="src/main/cppwrap/extras.txt"
+	 */
+	private File extrasFile;
 
 	@Override
 	public void execute() throws MojoExecutionException {
@@ -135,6 +156,10 @@ public class CppWrapMojo extends AbstractMojo {
 		final String sourcePath = sourceDir.isDirectory() ?
 			sourceDir.getPath() : null;
 		final String outputPath = outputDir.getPath();
+		final String extrasPath = extrasFile.exists() ?
+				extrasFile.getPath() : null;
+		final String corePath = coreFile.exists() ?
+				coreFile.getPath() : null;
 
 		final Jar2Lib jar2lib = new Jar2Lib() {
 			@Override
@@ -150,6 +175,8 @@ public class CppWrapMojo extends AbstractMojo {
 		jar2lib.setHeaderPath(headerPath);
 		jar2lib.setSourcePath(sourcePath);
 		jar2lib.setOutputPath(outputPath);
+		jar2lib.setExtrasPath(extrasPath);
+		jar2lib.setCorePath(corePath);
 		try {
 			jar2lib.execute();
 		}
@@ -176,9 +203,43 @@ public class CppWrapMojo extends AbstractMojo {
 		if (libraries != null) {
 			@SuppressWarnings("unchecked")
 			final List<Artifact> artifacts = project.getRuntimeArtifacts();
+			ArrayList<String> libs = new ArrayList<String>(Arrays.asList(libraries));
+			
+			Collections.sort(artifacts, new ArtComparator());
+			Collections.sort(libs);
+			int libIndex = 0;
+			int artIndex = 0;
+			
+			boolean done = artIndex == artifacts.size();
+			while (!done)
+			{
+				if(libs.get(libIndex).compareTo(artifacts.get(artIndex).getId()) == 0)
+				{
+					File artifactFile = artifacts.get(artIndex).getFile();
+					if (!artifactFile.exists()) {
+						throw new MojoExecutionException("Artifact not found: " +
+							artifactFile);
+					}
+					jars.add(artifactFile.getPath());
+					libIndex++;
+				}
+				else
+				{
+					artIndex++;
+				}
+				
+				if(artIndex == artifacts.size())
+				{
+					throw new MojoExecutionException("Invalid library dependency: " +
+							libs.get(libIndex));
+				}
+				
+				done = libIndex == libraries.length;
+			} 
 
+			/*
 			// TODO - avoid M*N complexity here
-			for (final String library : libraries) {
+			for (final String library : libraries) {	
 				boolean foundArtifact = false;
 				for (final Artifact artifact : artifacts) {
 					final String artifactId = artifact.getId();
@@ -198,6 +259,7 @@ public class CppWrapMojo extends AbstractMojo {
 						library);
 				}
 			}
+			*/
 		}
 		return jars;
 	}
@@ -213,6 +275,15 @@ public class CppWrapMojo extends AbstractMojo {
 		}
 
 		return jars;
+	}
+	
+	private class ArtComparator implements Comparator {
+		public int compare (Object obj1, Object obj2) {
+			Artifact art1 = (Artifact)obj1;
+			Artifact art2 = (Artifact)obj2;
+			
+			return art1.getId().compareTo(art2.getId());
+		}
 	}
 
 }
