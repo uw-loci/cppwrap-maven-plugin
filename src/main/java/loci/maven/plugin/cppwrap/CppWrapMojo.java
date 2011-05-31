@@ -122,7 +122,7 @@ public class CppWrapMojo extends AbstractMojo {
 	 *   default-value="target/cppwrap"
 	 */
 	private File outputDir;
-	
+
 	/**
 	 * Path to a text file listing core Java classes to be ensured
 	 * proxied.
@@ -131,7 +131,7 @@ public class CppWrapMojo extends AbstractMojo {
 	 *   default-value="src/main/cppwrap/core.txt"
 	 */
 	private File coreFile;
-	
+
 	/**
 	 * Path to text file, the contents of which will be
 	 * appended to resulting CMakeLists.txt for this project.
@@ -204,12 +204,12 @@ public class CppWrapMojo extends AbstractMojo {
 			@SuppressWarnings("unchecked")
 			final List<Artifact> artifacts = project.getRuntimeArtifacts();
 			ArrayList<String> libs = new ArrayList<String>(Arrays.asList(libraries));
-			
+
 			Collections.sort(artifacts, new ArtComparator());
 			Collections.sort(libs);
 			int libIndex = 0;
 			int artIndex = 0;
-			
+
 			boolean done = artIndex == artifacts.size();
 			while (!done)
 			{
@@ -227,39 +227,14 @@ public class CppWrapMojo extends AbstractMojo {
 				{
 					artIndex++;
 				}
-				
+
 				if(artIndex == artifacts.size())
 				{
 					throw new MojoExecutionException("Invalid library dependency: " +
 							libs.get(libIndex));
 				}
-				
 				done = libIndex == libraries.length;
-			} 
-
-			/*
-			// TODO - avoid M*N complexity here
-			for (final String library : libraries) {	
-				boolean foundArtifact = false;
-				for (final Artifact artifact : artifacts) {
-					final String artifactId = artifact.getId();
-					if (library.equals(artifactId)) {
-						final File artifactFile = artifact.getFile();
-						if (!artifactFile.exists()) {
-							throw new MojoExecutionException("Artifact not found: " +
-								artifactFile);
-						}
-						jars.add(artifactFile.getPath());
-						foundArtifact = true;
-						break;
-					}
-				}
-				if (!foundArtifact) {
-					throw new MojoExecutionException("Invalid library dependency: " +
-						library);
-				}
 			}
-			*/
 		}
 		return jars;
 	}
@@ -276,12 +251,12 @@ public class CppWrapMojo extends AbstractMojo {
 
 		return jars;
 	}
-	
+
 	private class ArtComparator implements Comparator {
 		public int compare (Object obj1, Object obj2) {
 			Artifact art1 = (Artifact)obj1;
 			Artifact art2 = (Artifact)obj2;
-			
+
 			return art1.getId().compareTo(art2.getId());
 		}
 	}
