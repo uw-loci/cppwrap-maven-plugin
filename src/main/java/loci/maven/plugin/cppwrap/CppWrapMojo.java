@@ -192,6 +192,7 @@ public class CppWrapMojo extends AbstractMojo {
 		final List<String> jars = new ArrayList<String>();
 
 		// add project artifact
+		// TODO: Try project.getArtifacts()?
 		final File projectArtifact = project.getArtifact().getFile();
 		if (projectArtifact == null || !projectArtifact.exists()) {
 			throw new MojoExecutionException(
