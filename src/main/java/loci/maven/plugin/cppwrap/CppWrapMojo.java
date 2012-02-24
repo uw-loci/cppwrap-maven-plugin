@@ -37,10 +37,10 @@ package loci.maven.plugin.cppwrap;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Arrays;
 
 import loci.jar2lib.Jar2Lib;
 import loci.jar2lib.VelocityException;
@@ -191,14 +191,16 @@ public class CppWrapMojo extends AbstractMojo {
 	private List<String> getLibraryJars() throws MojoExecutionException {
 		final List<String> jars = new ArrayList<String>();
 
-		// add project artifact
-		// TODO: Try project.getArtifacts()?
-		final File projectArtifact = project.getArtifact().getFile();
-		if (projectArtifact == null || !projectArtifact.exists()) {
-			throw new MojoExecutionException(
-				"Must execute package target first (e.g., mvn package cppwrap:wrap).");
+		// add project artifacts
+		List<Artifact> allArtifacts = project.getAttachedArtifacts();
+		for (Artifact artifact : allArtifacts) {
+			final File projectArtifact = artifact.getFile();
+			if (projectArtifact == null || !projectArtifact.exists()) {
+				throw new MojoExecutionException("Must execute package target first " +
+					"(e.g., mvn package cppwrap:wrap).");
+			}
+			jars.add(projectArtifact.getPath());
 		}
-		jars.add(projectArtifact.getPath());
 
 		// add explicitly enumerated dependencies
 		if (libraries != null) {
