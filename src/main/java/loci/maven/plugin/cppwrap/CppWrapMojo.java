@@ -41,6 +41,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 
 import loci.jar2lib.Jar2Lib;
 import loci.jar2lib.VelocityException;
@@ -192,33 +193,31 @@ public class CppWrapMojo extends AbstractMojo {
 		final List<String> jars = new ArrayList<String>();
 
 		// add project artifacts
-		List<Artifact> allArtifacts = project.getAttachedArtifacts();
-		for (Artifact artifact : allArtifacts) {
-			final File projectArtifact = artifact.getFile();
-			if (projectArtifact == null || !projectArtifact.exists()) {
-				throw new MojoExecutionException("Must execute package target first " +
-					"(e.g., mvn package cppwrap:wrap).");
-			}
-			jars.add(projectArtifact.getPath());
+		final File projectArtifact = project.getArtifact().getFile();
+		if (projectArtifact == null || !projectArtifact.exists()) {
+			throw new MojoExecutionException("Must execute package target first " +
+				"(e.g., mvn package cppwrap:wrap).");
 		}
+		jars.add(projectArtifact.getPath());
 
 		// add explicitly enumerated dependencies
 		if (libraries != null) {
 			@SuppressWarnings("unchecked")
-			final List<Artifact> artifacts = project.getRuntimeArtifacts();
+			final Artifact[] artifacts =
+        (Artifact[]) project.getDependencyArtifacts().toArray(new Artifact[0]);
 			ArrayList<String> libs = new ArrayList<String>(Arrays.asList(libraries));
 
-			Collections.sort(artifacts, new ArtComparator());
+			Arrays.sort(artifacts, new ArtComparator());
 			Collections.sort(libs);
 			int libIndex = 0;
 			int artIndex = 0;
 
-			boolean done = artIndex == artifacts.size();
+			boolean done = artIndex == artifacts.length;
 			while (!done)
 			{
-				if(libs.get(libIndex).compareTo(artifacts.get(artIndex).getId()) == 0)
+				if(libs.get(libIndex).compareTo(artifacts[artIndex].getId()) == 0)
 				{
-					File artifactFile = artifacts.get(artIndex).getFile();
+					File artifactFile = artifacts[artIndex].getFile();
 					if (!artifactFile.exists()) {
 						throw new MojoExecutionException("Artifact not found: " +
 							artifactFile);
@@ -231,7 +230,7 @@ public class CppWrapMojo extends AbstractMojo {
 					artIndex++;
 				}
 
-				if(artIndex == artifacts.size())
+				if(artIndex == artifacts.length)
 				{
 					throw new MojoExecutionException("Invalid library dependency: " +
 							libs.get(libIndex));
@@ -247,7 +246,7 @@ public class CppWrapMojo extends AbstractMojo {
 
 		// add project runtime dependencies
 		@SuppressWarnings("unchecked")
-		final List<Artifact> artifacts = project.getRuntimeArtifacts();
+		final Set<Artifact> artifacts = project.getDependencyArtifacts();
 		for (final Artifact classPathElement : artifacts) {
 			jars.add(classPathElement.getFile().getPath());
 		}
