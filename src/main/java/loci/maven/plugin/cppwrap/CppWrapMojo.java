@@ -204,7 +204,7 @@ public class CppWrapMojo extends AbstractMojo {
 		if (libraries != null) {
 			@SuppressWarnings("unchecked")
 			final Artifact[] artifacts =
-        (Artifact[]) project.getDependencyArtifacts().toArray(new Artifact[0]);
+				(Artifact[]) project.getDependencyArtifacts().toArray(new Artifact[0]);
 			ArrayList<String> libs = new ArrayList<String>(Arrays.asList(libraries));
 
 			Arrays.sort(artifacts, new ArtComparator());
