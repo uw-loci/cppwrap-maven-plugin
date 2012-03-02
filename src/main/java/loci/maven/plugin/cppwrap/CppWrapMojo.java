@@ -202,6 +202,7 @@ public class CppWrapMojo extends AbstractMojo {
 
 		// add explicitly enumerated dependencies
 		if (libraries != null) {
+			Set<Artifact> a = project.getDependencyArtifacts();
 			@SuppressWarnings("unchecked")
 			final Artifact[] artifacts =
 				(Artifact[]) project.getDependencyArtifacts().toArray(new Artifact[0]);
