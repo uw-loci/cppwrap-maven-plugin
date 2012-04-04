@@ -14,7 +14,7 @@
 
   <groupId>loci.maven.plugins</groupId>
   <artifactId>cppwrap-maven-plugin</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 
   <name>C++ Wrapper Maven Plugin</name>
@@ -38,7 +38,7 @@
     <dependency>
       <groupId>loci</groupId>
       <artifactId>jar2lib</artifactId>
-      <version>1.0.0</version>
+      <version>1.0.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
