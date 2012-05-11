@@ -9,7 +9,6 @@
     <groupId>loci</groupId>
     <artifactId>pom-loci</artifactId>
     <version>1.0</version>
-    <relativePath>../..</relativePath>
   </parent>
 
   <groupId>loci.maven.plugins</groupId>
