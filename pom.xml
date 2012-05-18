@@ -106,6 +106,13 @@
     </developer>
   </developers>
 
+  <scm>
+    <connection>scm:git:git://github.com/uw-loci/cppwrap-maven-plugin.git</connection>
+    <developerConnection>scm:git:git@github.com:uw-loci/cppwrap-maven-plugin.git</developerConnection>
+    <tag>HEAD</tag>
+    <url>https://github.com/uw-loci/cppwrap-maven-plugin</url>
+  </scm>
+
   <!-- NB: for project parent, in case of partial checkout -->
   <repositories>
     <repository>
