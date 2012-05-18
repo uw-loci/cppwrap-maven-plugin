@@ -49,18 +49,6 @@
       <artifactId>maven-project</artifactId>
       <version>${maven.version}</version>
     </dependency>
-
-    <!-- FIXME: Eliminate these transitive dependencies.  Required for Maven 3 support. -->
-    <dependency>
-      <groupId>org.apache.velocity</groupId>
-      <artifactId>velocity</artifactId>
-      <version>1.6.4</version>
-    </dependency>
-    <dependency>
-      <groupId>jace</groupId>
-      <artifactId>jace</artifactId>
-      <version>r39</version>
-    </dependency>
   </dependencies>
 
   <build>
