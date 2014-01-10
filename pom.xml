@@ -99,8 +99,8 @@
 	</developers>
 
 	<scm>
-		<connection>scm:git:git://github.com/uw-loci/cppwrap-maven-plugin.git</connection>
-		<developerConnection>scm:git:git@github.com:uw-loci/cppwrap-maven-plugin.git</developerConnection>
+		<connection>scm:git:git://github.com/uw-loci/cppwrap-maven-plugin</connection>
+		<developerConnection>scm:git:git@github.com:uw-loci/cppwrap-maven-plugin</developerConnection>
 		<tag>HEAD</tag>
 		<url>https://github.com/uw-loci/cppwrap-maven-plugin</url>
 	</scm>
