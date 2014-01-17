@@ -37,7 +37,7 @@
 		<dependency>
 			<groupId>loci</groupId>
 			<artifactId>jar2lib</artifactId>
-			<version>1.1.2-SNAPSHOT</version>
+			<version>1.1.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.maven</groupId>
