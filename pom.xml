@@ -19,7 +19,7 @@
 
 	<name>C++ Wrapper Maven Plugin</name>
 	<description>Maven 2.0 plugin for wrapping a Java library as a C++ project. Produces one C++ proxy class and header per Java class. Operates via the Jar2Lib command line tool.</description>
-	<url>http://loci.wisc.edu/software/jar2lib</url>
+	<url>https://loci.wisc.edu/software/jar2lib</url>
 	<inceptionYear>2011</inceptionYear>
 	<licenses>
 		<license>
@@ -32,7 +32,7 @@
 		<developer>
 			<id>ctrueden</id>
 			<name>Curtis Rueden</name>
-			<url>http://imagej.net/User:Rueden</url>
+			<url>https://imagej.net/User:Rueden</url>
 			<roles>
 				<role>founder</role>
 				<role>lead</role>
@@ -46,12 +46,12 @@
 	<contributors>
 		<contributor>
 			<name>Mark Hiner</name>
-			<url>http://imagej.net/User:Hinerm</url>
+			<url>https://imagej.net/User:Hinerm</url>
 			<properties><id>hinerm</id></properties>
 		</contributor>
 		<contributor>
 			<name>Melissa Linkert</name>
-			<url>http://imagej.net/User:Linkert</url>
+			<url>https://imagej.net/User:Linkert</url>
 			<properties><id>melissalinkert</id></properties>
 		</contributor>
 	</contributors>
@@ -70,7 +70,7 @@
 	<repositories>
 		<repository>
 			<id>imagej.public</id>
-			<url>http://maven.imagej.net/content/groups/public</url>
+			<url>https://maven.imagej.net/content/groups/public</url>
 		</repository>
 	</repositories>
 
