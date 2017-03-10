@@ -21,7 +21,6 @@
 	<description>Maven 2.0 plugin for wrapping a Java library as a C++ project. Produces one C++ proxy class and header per Java class. Operates via the Jar2Lib command line tool.</description>
 	<url>http://loci.wisc.edu/software/jar2lib</url>
 	<inceptionYear>2011</inceptionYear>
-
 	<licenses>
 		<license>
 			<name>Simplified BSD License</name>
@@ -29,9 +28,50 @@
 		</license>
 	</licenses>
 
+	<developers>
+		<developer>
+			<id>ctrueden</id>
+			<name>Curtis Rueden</name>
+			<url>http://imagej.net/User:Rueden</url>
+			<roles>
+				<role>lead</role>
+				<role>debugger</role>
+				<role>reviewer</role>
+				<role>support</role>
+				<role>maintainer</role>
+			</roles>
+		</developer>
+	</developers>
+	<contributors>
+		<contributor>
+			<name>Mark Hiner</name>
+			<url>http://imagej.net/User:Hinerm</url>
+			<properties><id>hinerm</id></properties>
+		</contributor>
+		<contributor>
+			<name>Melissa Linkert</name>
+			<url>http://imagej.net/User:Linkert</url>
+			<properties><id>melissalinkert</id></properties>
+		</contributor>
+	</contributors>
+
+	<scm>
+		<connection>scm:git:git://github.com/uw-loci/cppwrap-maven-plugin</connection>
+		<developerConnection>scm:git:git@github.com:uw-loci/cppwrap-maven-plugin</developerConnection>
+		<tag>HEAD</tag>
+		<url>https://github.com/uw-loci/cppwrap-maven-plugin</url>
+	</scm>
+
 	<properties>
 		<maven.version>2.0.9</maven.version>
 	</properties>
+
+	<repositories>
+		<repository>
+			<id>imagej.public</id>
+			<url>http://maven.imagej.net/content/groups/public</url>
+		</repository>
+	</repositories>
 
 	<dependencies>
 		<dependency>
@@ -73,46 +113,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
-	<developers>
-		<developer>
-			<id>ctrueden</id>
-			<name>Curtis Rueden</name>
-			<url>http://imagej.net/User:Rueden</url>
-			<roles>
-				<role>lead</role>
-				<role>debugger</role>
-				<role>reviewer</role>
-				<role>support</role>
-				<role>maintainer</role>
-			</roles>
-		</developer>
-	</developers>
-	<contributors>
-		<contributor>
-			<name>Mark Hiner</name>
-			<url>http://imagej.net/User:Hinerm</url>
-			<properties><id>hinerm</id></properties>
-		</contributor>
-		<contributor>
-			<name>Melissa Linkert</name>
-			<url>http://imagej.net/User:Linkert</url>
-			<properties><id>melissalinkert</id></properties>
-		</contributor>
-	</contributors>
-
-	<scm>
-		<connection>scm:git:git://github.com/uw-loci/cppwrap-maven-plugin</connection>
-		<developerConnection>scm:git:git@github.com:uw-loci/cppwrap-maven-plugin</developerConnection>
-		<tag>HEAD</tag>
-		<url>https://github.com/uw-loci/cppwrap-maven-plugin</url>
-	</scm>
-
-	<repositories>
-		<repository>
-			<id>imagej.public</id>
-			<url>http://maven.imagej.net/content/groups/public</url>
-		</repository>
-	</repositories>
-
 </project>
