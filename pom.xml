@@ -92,6 +92,9 @@
 Wisconsin-Madison.</license.copyrightOwners>
 		<license.projectName>Maven 2.0 plugin for wrapping a Java library as a C++ project.</license.projectName>
 		<maven.version>2.0.9</maven.version>
+
+		<!-- NB: Deploy releases to the ImageJ Maven repository. -->
+		<releaseProfiles>deploy-to-imagej</releaseProfiles>
 	</properties>
 
 	<repositories>
